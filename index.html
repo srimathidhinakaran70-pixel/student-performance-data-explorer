@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102a43">
+  <title>Student Performance Data Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" data-page="dashboard" aria-label="Student Data Explorer home">
+        <span class="brand-mark">SD</span>
+        <span><strong>Data Explorer</strong><small>STUDENT ANALYTICS</small></span>
+      </a>
+      <div class="side-label">WORKSPACE</div>
+      <nav class="nav-list" aria-label="Main navigation">
+        <button class="nav-item active" data-page="dashboard"><span class="nav-icon">◫</span>Dashboard</button>
+        <button class="nav-item" data-page="collect"><span class="nav-icon">＋</span>Collect Data</button>
+        <button class="nav-item" data-page="explore"><span class="nav-icon">▤</span>Explore Dataset</button>
+        <button class="nav-item" data-page="quality"><span class="nav-icon">◉</span>Data Quality</button>
+        <button class="nav-item" data-page="about"><span class="nav-icon">ⓘ</span>About Project</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="storage-card"><span class="storage-dot"></span><div><strong>Local workspace</strong><small>Your data stays in this browser</small></div></div>
+        <div class="profile"><div class="avatar">SD</div><div><strong>Student Analyst</strong><small>Internship project</small></div></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" aria-label="Open navigation">☰</button>
+        <div class="breadcrumb"><span>Workspace</span><span class="crumb-sep">/</span><strong id="pageCrumb">Dashboard</strong></div>
+        <div class="top-actions"><span class="status-pill"><span></span> Demo workspace</span><button class="btn btn-primary btn-small" id="topAddBtn">＋ Add record</button></div>
+      </header>
+
+      <section class="page active" id="page-dashboard">
+        <div class="page-heading">
+          <div><p class="eyebrow">OVERVIEW</p><h1>Student performance</h1><p class="subheading">A clear view of your collected dataset and key indicators.</p></div>
+          <div class="heading-actions"><button class="btn btn-secondary" id="dashboardImportBtn">↑ Import CSV</button><button class="btn btn-primary" id="dashboardExportBtn">↓ Export dataset</button></div>
+        </div>
+        <div class="welcome-banner">
+          <div><span class="banner-tag">DATA COLLECTION PROJECT</span><h2>Turn student records into insights.</h2><p>Collect structured data, check its quality, and explore performance patterns in one place.</p><button class="btn btn-white" data-goto="collect">Collect a record <span>→</span></button></div>
+          <div class="banner-art" aria-hidden="true"><div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div><div class="art-chart"><span style="height:36%"></span><span style="height:57%"></span><span style="height:44%"></span><span style="height:78%"></span><span style="height:64%"></span><span style="height:92%"></span></div><div class="art-bubble">↗ <strong>Insights</strong></div></div>
+        </div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-top"><span class="stat-label">Total records</span><span class="stat-icon icon-blue">▤</span></div><div class="stat-value" id="statRecords">—</div><div class="stat-foot"><span class="foot-dot blue"></span>Student profiles collected</div></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-label">Average marks</span><span class="stat-icon icon-teal">↗</span></div><div class="stat-value" id="statMarks">—</div><div class="stat-foot"><span class="foot-dot teal"></span>Out of 100 points</div></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-label">Avg. attendance</span><span class="stat-icon icon-purple">◷</span></div><div class="stat-value" id="statAttendance">—</div><div class="stat-foot"><span class="foot-dot purple"></span>Attendance percentage</div></article>
+          <article class="stat-card"><div class="stat-top"><span class="stat-label">Departments</span><span class="stat-icon icon-orange">⌘</span></div><div class="stat-value" id="statDepartments">—</div><div class="stat-foot"><span class="foot-dot orange"></span>Unique departments</div></article>
+        </div>
+        <div class="charts-grid">
+          <article class="panel chart-panel"><div class="panel-heading"><div><h3>Performance distribution</h3><p>Students grouped by marks</p></div><span class="panel-menu">•••</span></div><div class="chart-wrap"><canvas id="performanceChart" aria-label="Performance distribution chart"></canvas></div><div class="chart-legend"><span><i class="legend-dot legend-high"></i>Excellent (80+)</span><span><i class="legend-dot legend-mid"></i>Good (60–79)</span><span><i class="legend-dot legend-low"></i>Needs support (&lt;60)</span></div></article>
+          <article class="panel chart-panel"><div class="panel-heading"><div><h3>Department comparison</h3><p>Average marks by department</p></div><span class="panel-menu">•••</span></div><div class="chart-wrap"><canvas id="departmentChart" aria-label="Average marks by department chart"></canvas></div></article>
+        </div>
+        <article class="panel table-panel"><div class="panel-heading"><div><h3>Recent student records</h3><p>A quick preview of the latest records</p></div><button class="text-button" data-goto="explore">View all records →</button></div><div class="table-scroll"><table><thead><tr><th>STUDENT</th><th>DEPARTMENT</th><th>YEAR</th><th>ATTENDANCE</th><th>MARKS</th><th>PERFORMANCE</th></tr></thead><tbody id="recentTable"></tbody></table></div><div class="table-footer"><span id="recentCount">Showing recent records</span><button class="text-button" data-goto="explore">Open dataset →</button></div></article>
+      </section>
+
+      <section class="page" id="page-collect">
+        <div class="page-heading"><div><p class="eyebrow">DATA INPUT</p><h1>Collect data</h1><p class="subheading">Add a student record to your dataset with consistent, validated fields.</p></div><button class="btn btn-secondary" data-goto="explore">View dataset →</button></div>
+        <div class="form-layout">
+          <article class="panel form-panel"><div class="panel-heading"><div><h3 id="formTitle">Student information</h3><p>Fields marked with * are required.</p></div><span class="step-badge">01 / RECORD</span></div>
+            <form id="studentForm" novalidate>
+              <input type="hidden" id="editOriginalId">
+              <div class="form-grid">
+                <label class="field"><span>Student ID <b>*</b></span><input id="studentId" name="studentId" placeholder="e.g. STU-1024" required><small>Must be unique for each student.</small></label>
+                <label class="field"><span>Student name <b>*</b></span><input id="studentName" name="studentName" placeholder="Enter full name" required></label>
+                <label class="field"><span>Department <b>*</b></span><select id="department" name="department" required><option value="">Select department</option><option>Information Technology</option><option>Computer Science</option><option>Electronics</option><option>Mechanical</option><option>Business Analytics</option><option>Data Science</option><option>Electrical</option><option>Other</option></select></label>
+                <label class="field"><span>Year of study <b>*</b></span><select id="year" name="year" required><option value="">Select year</option><option value="1">Year 1</option><option value="2">Year 2</option><option value="3">Year 3</option><option value="4">Year 4</option></select></label>
+                <label class="field"><span>Attendance (%) <b>*</b></span><div class="input-suffix"><input id="attendance" name="attendance" type="number" min="0" max="100" step="0.1" placeholder="e.g. 92" required><span>%</span></div></label>
+                <label class="field"><span>Marks (%) <b>*</b></span><div class="input-suffix"><input id="marks" name="marks" type="number" min="0" max="100" step="0.1" placeholder="e.g. 84" required><span>/ 100</span></div></label>
+                <label class="field full-field"><span>Data collection date <b>*</b></span><input id="collectionDate" name="collectionDate" type="date" required></label>
+              </div>
+              <div class="form-error" id="formError" role="alert"></div>
+              <div class="form-actions"><button class="btn btn-secondary" type="button" id="clearFormBtn">Clear form</button><button class="btn btn-primary" type="submit" id="saveRecordBtn">Save student record <span>→</span></button></div>
+            </form>
+          </article>
+          <aside class="side-info"><div class="info-card info-blue"><span class="info-icon">✦</span><h3>Good data starts here</h3><p>Consistent fields make your dataset easier to filter, compare, and analyze.</p><ul><li>Use a unique student ID</li><li>Keep marks between 0 and 100</li><li>Check attendance values</li></ul></div><div class="info-card"><div class="mini-icon">✓</div><h3>Validation included</h3><p>The form checks required fields, numeric ranges, and duplicate IDs before saving.</p></div></aside>
+        </div>
+      </section>
+
+      <section class="page" id="page-explore">
+        <div class="page-heading"><div><p class="eyebrow">DATASET</p><h1>Explore dataset</h1><p class="subheading">Search, filter, sort, update, and export your student records.</p></div><div class="heading-actions"><button class="btn btn-secondary" id="exploreImportBtn">↑ Import CSV</button><button class="btn btn-primary" id="exploreExportBtn">↓ Export CSV</button></div></div>
+        <div class="dataset-summary"><div><span class="summary-label">Records in view</span><strong id="viewCount">0</strong></div><div><span class="summary-label">Current average marks</span><strong id="viewAverage">—</strong></div><div><span class="summary-label">Active filters</span><strong id="activeFilterCount">0</strong></div><button class="btn btn-secondary btn-small" id="resetFiltersBtn">Reset filters</button></div>
+        <article class="panel dataset-panel"><div class="filter-toolbar"><div class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Search by student name or ID..." aria-label="Search by name or ID"></div><select id="departmentFilter" aria-label="Filter by department"><option value="">All departments</option></select><select id="yearFilter" aria-label="Filter by year"><option value="">All years</option><option value="1">Year 1</option><option value="2">Year 2</option><option value="3">Year 3</option><option value="4">Year 4</option></select><select id="sortFilter" aria-label="Sort dataset"><option value="newest">Recently added</option><option value="marks-desc">Marks: high to low</option><option value="marks-asc">Marks: low to high</option><option value="attendance-desc">Attendance: high to low</option><option value="name-asc">Name: A to Z</option></select></div>
+          <div class="table-scroll"><table><thead><tr><th>STUDENT ID</th><th>STUDENT</th><th>DEPARTMENT</th><th>YEAR</th><th>ATTENDANCE</th><th>MARKS</th><th>PERFORMANCE</th><th>ACTIONS</th></tr></thead><tbody id="datasetTable"></tbody></table></div><div class="empty-state hidden" id="emptyState"><div class="empty-icon">⌕</div><h3>No records found</h3><p>Try changing your search or filters, or add a new record.</p><button class="btn btn-secondary" id="emptyAddBtn">Add a record</button></div>
+          <div class="table-footer"><span id="datasetCount">0 records</span><div class="pagination"><button id="prevPage" class="page-btn" aria-label="Previous page">←</button><span id="pageInfo">Page 1</span><button id="nextPage" class="page-btn" aria-label="Next page">→</button></div></div>
+        </article>
+        <div class="import-row"><div><strong>Have a dataset already?</strong><p>Import a CSV file with the required column headers.</p></div><button class="btn btn-secondary" id="importBottomBtn">Choose CSV file ↑</button></div>
+      </section>
+
+      <section class="page" id="page-quality">
+        <div class="page-heading"><div><p class="eyebrow">TRUST YOUR DATA</p><h1>Data quality</h1><p class="subheading">Review completeness, duplicate IDs, and values that may need attention.</p></div><button class="btn btn-secondary" id="qualityRefreshBtn">↻ Refresh report</button></div>
+        <div class="quality-stats stats-grid"><article class="stat-card"><div class="stat-top"><span class="stat-label">Total records</span><span class="stat-icon icon-blue">▤</span></div><div class="stat-value" id="qualityTotal">0</div><div class="stat-foot">Records currently stored</div></article><article class="stat-card"><div class="stat-top"><span class="stat-label">Valid records</span><span class="stat-icon icon-teal">✓</span></div><div class="stat-value" id="qualityValid">0</div><div class="stat-foot">All required values present</div></article><article class="stat-card"><div class="stat-top"><span class="stat-label">Issues found</span><span class="stat-icon icon-orange">!</span></div><div class="stat-value" id="qualityIssues">0</div><div class="stat-foot">Missing or invalid values</div></article><article class="stat-card"><div class="stat-top"><span class="stat-label">Duplicate IDs</span><span class="stat-icon icon-purple">⧉</span></div><div class="stat-value" id="qualityDuplicates">0</div><div class="stat-foot">Repeated student identifiers</div></article></div>
+        <article class="panel quality-panel"><div class="panel-heading"><div><h3>Quality checks</h3><p>Run these checks to identify records that may need correction.</p></div><span class="quality-score" id="qualityScore">—% complete</span></div><div id="qualityChecks" class="quality-checks"></div></article>
+        <article class="panel quality-panel"><div class="panel-heading"><div><h3>How to improve data quality</h3><p>Simple practices for a more reliable dataset.</p></div></div><div class="tips-grid"><div class="tip"><span>01</span><div><strong>Use consistent formats</strong><p>Keep dates in YYYY-MM-DD format and use the same department names.</p></div></div><div class="tip"><span>02</span><div><strong>Validate before saving</strong><p>Check required fields and numeric ranges as records enter the dataset.</p></div></div><div class="tip"><span>03</span><div><strong>Review duplicates</strong><p>Use student IDs as unique identifiers to avoid repeated records.</p></div></div></div></article>
+      </section>
+
+      <section class="page" id="page-about">
+        <div class="page-heading"><div><p class="eyebrow">PROJECT NOTES</p><h1>About this project</h1><p class="subheading">A beginner-friendly data collection and exploration application.</p></div></div>
+        <div class="about-hero panel"><div class="about-mark">SD</div><div><span class="banner-tag">DATA ANALYTICS INTERNSHIP</span><h2>Student Performance Data Explorer</h2><p>A practical demonstration of collecting structured records, maintaining data quality, exploring patterns, and exporting data for further analysis.</p></div></div>
+        <div class="about-grid"><article class="panel about-card"><div class="about-card-icon">⌘</div><h3>Technologies used</h3><div class="tech-list"><span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>Chart.js</span><span>localStorage</span><span>CSV</span></div><p>Built with static frontend technologies and browser-based storage.</p></article><article class="panel about-card"><div class="about-card-icon">▤</div><h3>Dataset description</h3><p>The sample dataset contains fictional student records across multiple departments and study years, including attendance and marks.</p><p class="muted-note">All sample identities and scores are fictional and intended for demonstration only.</p></article><article class="panel about-card"><div class="about-card-icon">⇄</div><h3>Database readiness</h3><p>Records are saved in this browser using localStorage. The storage layer is separated in the JavaScript so it can later be replaced by Supabase or Firebase.</p><p class="muted-note">This version does not connect to a remote database.</p></article></div>
+        <article class="panel about-next"><div><h3>Ready to explore your data?</h3><p>Start by loading the sample dataset or collecting your first record.</p></div><div class="heading-actions"><button class="btn btn-secondary" id="aboutSampleBtn">Load sample data</button><button class="btn btn-primary" data-goto="collect">Add a record →</button></div></article>
+        <article class="panel readme-panel"><h3>Run locally</h3><ol><li>Download or clone the project repository.</li><li>Keep <code>index.html</code>, <code>style.css</code>, <code>script.js</code>, and <code>sample-data.csv</code> in the same folder.</li><li>Open <code>index.html</code> in a modern browser, or use VS Code Live Server.</li><li>Use “Load Sample Data” to populate the dashboard.</li></ol><h3>Publish with GitHub Pages</h3><ol><li>Push the project files to a GitHub repository.</li><li>Open repository Settings → Pages.</li><li>Choose the main branch and root folder, then save.</li><li>Wait for GitHub Pages to publish your static site.</li></ol><p class="muted-note">Chart.js is loaded from a CDN, so an internet connection is required for charts. Browser localStorage is local to the browser/device and is not shared with other users.</p></article>
+      </section>
+
+      <input type="file" id="csvInput" accept=".csv,text/csv" hidden>
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+      <footer class="footer"><span>Student Performance Data Explorer</span><span>Built for learning · Data collection & exploration</span></footer>
+    </main>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
